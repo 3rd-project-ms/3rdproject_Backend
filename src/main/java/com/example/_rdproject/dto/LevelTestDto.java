@@ -3,9 +3,9 @@ package com.example._rdproject.dto;
 import com.example._rdproject.domain.AssignedLevel;
 import com.example._rdproject.domain.TestType;
 import com.example._rdproject.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 public class LevelTestDto {
 
@@ -23,6 +23,31 @@ public class LevelTestDto {
     @AllArgsConstructor
     public static class StatusResponse {
         private Long userId;
-        private User.CefrLevel currentLevel; // A1~C2 또는 레벨 테스트 전이면 null
+        private User.CefrLevel currentLevel;
+    }
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class QuestionListResponse {
+        private List<QuestionDto> questions;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class QuestionDto {
+        private Long questionId;
+        private String questionText;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SubmitAnswerRequest {
+        private Long userId;
+        private Long questionId;
+        private String answerText;
     }
 }

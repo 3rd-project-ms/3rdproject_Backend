@@ -3,10 +3,10 @@ package com.example._rdproject.service;
 import com.example._rdproject.dto.StageProgressDto;
 import com.example._rdproject.entity.Stage;
 import com.example._rdproject.entity.User;
+import com.example._rdproject.entity.UserCharacter;
+import com.example._rdproject.entity.Character;
 import com.example._rdproject.entity.UserStageProgress;
-import com.example._rdproject.repository.UserRepository;
-import com.example._rdproject.repository.StageRepository;
-import com.example._rdproject.repository.UserStageProgressRepository;
+import com.example._rdproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +22,8 @@ public class StageService {
     private final UserStageProgressRepository userStageProgressRepository;
     private final StageRepository stageRepository;
     private final UserRepository userRepository;
+    private final CharacterRepository characterRepository;
+    private final UserCharacterRepository userCharacterRepository;
 
     /**
      * 스테이지 진행도 완료 처리 및 다음 단계 동적 해금
@@ -118,5 +120,34 @@ public class StageService {
 
         // 6. 다음 스테이지가 없는 경우 (해당 캐릭터 엔딩 / 마지막 스테이지 클리어)
         return new StageProgressDto.UpdateResponse(true, false, null);
+    }
+    /**
+     * 특정 캐릭터 획득 처리
+     */
+    @Transactional
+    public void acquireCharacter(Long userId, String characterId) {
+        // 1. 유저 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. ID: " + userId));
+
+        // 2. 캐릭터 조회 (String ID)
+        Character character = characterRepository.findById(characterId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다. ID: " + characterId));
+
+        // 3. 이미 획득한 캐릭터인지 확인
+        boolean alreadyAcquired = userCharacterRepository.existsByUserAndCharacter(user, character);
+        if (alreadyAcquired) {
+            throw new IllegalStateException("이미 보유 중인 캐릭터입니다.");
+        }
+
+        // 4. 캐릭터 획득 처리 (DB 저장)
+        UserCharacter userCharacter = UserCharacter.builder()
+                .user(user)
+                .character(character)
+                .affinityScore(0) // 초기 호감도 0
+                .isUnlocked(true) // 획득과 동시에 해금
+                .build();
+
+        userCharacterRepository.save(userCharacter);
     }
 }

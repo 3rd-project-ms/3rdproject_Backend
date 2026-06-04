@@ -42,4 +42,18 @@ public class LevelTestController {
         // 1번째 인자: 메시지, 2번째 인자: 데이터(response)
         return ResponseEntity.ok(CommonResponse.success("유저 레벨 상태 조회가 완료되었습니다.", response));
     }
+    // 문항 조회 API
+    @Operation(summary = "레벨테스트 질문 목록", description = "주관식/음성 문항에 대한 질문을 보여줍니다.")
+    @GetMapping("/questions")
+    public ResponseEntity<CommonResponse<LevelTestDto.QuestionListResponse>> getQuestions() {
+        return ResponseEntity.ok(CommonResponse.success("성공", levelTestService.getAllQuestions()));
+    }
+
+    // 답변 제출 API
+    @Operation(summary = "레벨 테스트 답변 제출", description = "주관식/음성 문항에 대한 답변을 저장합니다.")
+    @PostMapping("/answer")
+    public ResponseEntity<CommonResponse<Void>> submitAnswer(@RequestBody LevelTestDto.SubmitAnswerRequest request) {
+        levelTestService.submitAnswer(request.getUserId(), request.getQuestionId(), request.getAnswerText());
+        return ResponseEntity.ok(CommonResponse.success("답변이 저장되었습니다.", null));
+    }
 }
