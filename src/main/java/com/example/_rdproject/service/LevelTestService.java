@@ -66,19 +66,24 @@ public class LevelTestService {
     // 1. 문항 조회
     public LevelTestDto.QuestionListResponse getAllQuestions() {
         List<Question> questions = questionRepository.findAll();
+
         List<LevelTestDto.QuestionDto> dtos = questions.stream()
                 .map(q -> LevelTestDto.QuestionDto.builder()
                         .questionId(q.getId())
                         .questionText(q.getQuestionText())
+                        .difficultyLevel(q.getDifficultyLevel())
+                        .category(q.getCategory())
                         .build())
                 .collect(Collectors.toList());
 
-        return new LevelTestDto.QuestionListResponse(dtos);
+        return LevelTestDto.QuestionListResponse.builder()
+                .questions(dtos)
+                .build();
     }
 
     // 2. 답변 제출
     @Transactional
-    public void submitAnswer(Long userId, Long questionId, String answerText) {
+    public void submitAnswer(Long userId, Long questionId, String answerText, AnswerHistory.AnswerType answerType) {
         User user = userRepository.findById(userId).orElseThrow();
         Question question = questionRepository.findById(questionId).orElseThrow();
 
@@ -86,6 +91,7 @@ public class LevelTestService {
                 .user(user)
                 .question(question)
                 .answerText(answerText)
+                .answerType(answerType)
                 .build();
 
         answerHistoryRepository.save(history);

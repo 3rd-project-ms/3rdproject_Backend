@@ -2,6 +2,7 @@ package com.example._rdproject.dto;
 
 import com.example._rdproject.domain.AssignedLevel;
 import com.example._rdproject.domain.TestType;
+import com.example._rdproject.entity.AnswerHistory;
 import com.example._rdproject.entity.User;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class LevelTestDto {
         private Long userId;
         private User.CefrLevel currentLevel;
     }
+
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -40,6 +42,8 @@ public class LevelTestDto {
     public static class QuestionDto {
         private Long questionId;
         private String questionText;
+        private String difficultyLevel; // 문항별 목표 레벨
+        private String category;        // 문항 유형
     }
 
     @Getter
@@ -49,5 +53,6 @@ public class LevelTestDto {
         private Long userId;
         private Long questionId;
         private String answerText;
+        private AnswerHistory.AnswerType answerType; // VOICE 또는 TEXT
     }
 }
