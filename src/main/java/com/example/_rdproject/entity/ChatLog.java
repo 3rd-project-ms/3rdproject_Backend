@@ -6,6 +6,7 @@ import com.example._rdproject.domain.PenaltyReasonType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -69,5 +70,5 @@ public class ChatLog {
     private PenaltyReasonType penaltyReason;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }

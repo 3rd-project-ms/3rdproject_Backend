@@ -28,7 +28,7 @@ public class Correction {
     @Column(name = "original_sentence", length = Integer.MAX_VALUE)
     private String originalSentence;
 
-    @Column(name = "corrected_sentence", length = Integer.MAX_VALUE)
+    @Column(name = "corrected_sentence", length = Integer.MAX_VALUE, nullable = true)
     private String correctedSentence;
 
     @Column(name = "corrections_json")
