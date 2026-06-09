@@ -10,4 +10,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // guestId로 기존 유저가 있는지 조회하는 쿼리
     Optional<User> findByGuestId(String guestId);
+
+    // 자체 회원가입/로그인용 아이디 조회
+    Optional<User> findByLoginId(String loginId);
 }

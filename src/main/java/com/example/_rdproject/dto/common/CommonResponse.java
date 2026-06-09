@@ -23,4 +23,7 @@ public class CommonResponse<T> {
                 .data(data)
                 .build();
     }
+    public static <T> CommonResponse<T> error(String code, String message) {
+        return new CommonResponse<>(false, code, message, null);
+    }
 }
