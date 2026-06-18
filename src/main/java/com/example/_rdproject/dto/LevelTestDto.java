@@ -100,6 +100,12 @@ public class LevelTestDto {
 
         @JsonProperty("pronunciation_evaluations")
         private PronunciationEvaluations pronunciationEvaluations;
+
+        @JsonProperty("is_finished")
+        private Boolean isFinished;
+
+        @JsonProperty("final_result")
+        private FinalResult finalResult;
     }
 
     @Getter
@@ -114,6 +120,30 @@ public class LevelTestDto {
         @JsonProperty("word_details_json")
         private List<Map<String, Object>> wordDetailsJson;
     }
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FinalResult {
+        @JsonProperty("assigned_level")
+        private String assignedLevel; // 예: "B2"
 
+        @JsonProperty("test_score")
+        private Integer testScore;
+
+        @JsonProperty("fluency_score")
+        private Integer fluencyScore;
+
+        @JsonProperty("expression_score")
+        private Integer expressionScore;
+
+        @JsonProperty("grammar_score")
+        private Integer grammarScore;
+
+        @JsonProperty("task_completion_score")
+        private Integer taskCompletionScore;
+
+        @JsonProperty("vocabulary_score")
+        private Integer vocabularyScore;
+    }
 
 }
