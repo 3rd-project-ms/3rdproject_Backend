@@ -1,5 +1,7 @@
 package com.example._rdproject.service;
 
+import com.example._rdproject.domain.CefrLevelType;
+import com.example._rdproject.domain.LevelTestType;
 import com.example._rdproject.dto.LevelTestDto;
 import com.example._rdproject.entity.*;
 import com.example._rdproject.repository.*;
@@ -119,6 +121,21 @@ public class LevelTestService {
                     .build();
 
             pronunciationEvaluationRepository.save(evaluation);
+        }
+        if (aiResponse != null && Boolean.TRUE.equals(aiResponse.getIsFinished()) && aiResponse.getFinalResult() != null) {
+            LevelTestDto.FinalResult finalResult = aiResponse.getFinalResult();
+
+            // 1. 로컬 DB에 최종 성적 기록 생성
+            EnglishLevelTest levelTestResult = EnglishLevelTest.builder()
+                    .user(user)
+                    .testType(LevelTestType.test)
+                    .assignedLevel(CefrLevelType.valueOf(finalResult.getAssignedLevel()))
+                    .testScore(finalResult.getTestScore())
+                    .build();
+            levelTestRepository.save(levelTestResult);
+
+            // 2. 유저 엔티티의 현재 영어 레벨 즉시 갱신
+            user.updateCurrentLevel(CefrLevelType.valueOf(finalResult.getAssignedLevel()));
         }
 
         return aiResponse;
